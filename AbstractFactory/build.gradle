@@ -1,0 +1,47 @@
+plugins {
+    id 'java'
+}
+
+group 'com.testinglaboratory'
+version '1.0'
+
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
+repositories {
+    jcenter()
+}
+
+def lombok = 'org.projectlombok:lombok:1.18.12'
+
+dependencies {
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.12.1'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.12.1'
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
+    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.14.0'
+
+    testImplementation('org.junit.jupiter:junit-jupiter:5.3.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+
+    testImplementation(platform('org.junit:junit-bom:5.7.2'))
+
+
+    implementation lombok
+    annotationProcessor lombok
+
+    testImplementation lombok
+    testAnnotationProcessor lombok
+}
+
+test {
+    useJUnitPlatform()
+    // for custom tagging - suites via gradle tasks
+//    useJUnitPlatform() {
+//        includeTags 'fast'
+//        excludeTags 'slow'
+//    }
+    afterTest { desc, result ->
+        logger.quiet "Executing test ${desc.name} [${desc.className}] with result: ${result.resultType}"
+    }
+}
